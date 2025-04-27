@@ -8,20 +8,17 @@
 #include <sstream>
 #include <sys/time.h>
 #include <omp.h>
-# include <arm_neon.h> // use Neon
+# include <arm_neon.h>
 using namespace std;
+const int n=1000;
+float A[n][n];
+float B[n][n];
 
 float32x4_t vx = vmovq_n_f32(0);
 float32x4_t vaij = vmovq_n_f32(0);
 float32x4_t vaik = vmovq_n_f32(0);
 float32x4_t vakj = vmovq_n_f32(0);
 float32x4_t va = vmovq_n_f32(0);
-const int n=1000;
-float A[n][n];
-float B[n][n];
-
-
-
 
 
 void ordinary()
@@ -81,7 +78,7 @@ void cache()
 
 
 
-void f_pro()
+void pro()
 {
     for (int k = 0; k < n; k++)
 	{
@@ -126,7 +123,7 @@ void f_pro()
 }
 
 
-void f_pro_cache()
+void pro_cache()
 {
     for (int i = 0; i < n; i++)
     {
@@ -179,7 +176,7 @@ void f_pro_cache()
 }
 
 
-void f_pro_division()
+void pro_division()
 {
     //只优化除法
     for (int k = 0; k < n; k++)
@@ -212,7 +209,7 @@ void f_pro_division()
 }
 
 
-void f_pro_elimination()
+void pro_elimination()
 {
     //不优化除法
     int j;
@@ -250,7 +247,7 @@ void f_pro_elimination()
 }
 
 
-void f_pro_alignment()
+void pro_alignment()
 {
     for(int k = 0;k < n; k++)
     {
@@ -342,57 +339,57 @@ int main()
     struct timeval head,tail;
 
     initit();
-    auto start = std::chrono::high_resolution_clock::now();  // 开始计时
-    f_pro();
-    auto end = std::chrono::high_resolution_clock::now();    // 结束计时
+    auto start = std::chrono::high_resolution_clock::now();
+    pro();
+    auto end = std::chrono::high_resolution_clock::now(); 
     double seconds = std::chrono::duration<double, std::milli>(end - start).count();
-    cout<<"f_pro: "<<seconds<<" ms"<<endl;
+    cout<<"pro: "<<seconds<<" ms"<<endl;
 
     initit();
-    auto start = std::chrono::high_resolution_clock::now();  // 开始计时
-    f_pro_cache();
-    auto end = std::chrono::high_resolution_clock::now();    // 结束计时
+    auto start = std::chrono::high_resolution_clock::now(); 
+    pro_cache();
+    auto end = std::chrono::high_resolution_clock::now();  
     double seconds = std::chrono::duration<double, std::milli>(end - start).count();
-    cout<<"f_pro_cache: "<<seconds<<" ms"<<endl;
+    cout<<"pro_cache: "<<seconds<<" ms"<<endl;
 
 
     initit();
-    auto start = std::chrono::high_resolution_clock::now();  // 开始计时
+    auto start = std::chrono::high_resolution_clock::now(); 
     ordinary();
-    auto end = std::chrono::high_resolution_clock::now();    // 结束计时
+    auto end = std::chrono::high_resolution_clock::now();  
     double seconds = std::chrono::duration<double, std::milli>(end - start).count();
     cout<<"ordinary: "<<seconds<<" ms"<<endl;
 
 
     initit();
-    auto start = std::chrono::high_resolution_clock::now();  // 开始计时
+    auto start = std::chrono::high_resolution_clock::now(); 
     cache();
-    auto end = std::chrono::high_resolution_clock::now();    // 结束计时
+    auto end = std::chrono::high_resolution_clock::now();    
     double seconds = std::chrono::duration<double, std::milli>(end - start).count();
     cout<<"cache: "<<seconds<<" ms"<<endl;
 
     initit();
-    auto start = std::chrono::high_resolution_clock::now();  // 开始计时
-    f_pro_alignment();
-    auto end = std::chrono::high_resolution_clock::now();    // 结束计时
+    auto start = std::chrono::high_resolution_clock::now();  
+    pro_alignment();
+    auto end = std::chrono::high_resolution_clock::now();    
     double seconds = std::chrono::duration<double, std::milli>(end - start).count();
-    cout<<"f_pro_alignment: "<<seconds<<" ms"<<endl;
+    cout<<"pro_alignment: "<<seconds<<" ms"<<endl;
 
 
     initit();
-    auto start = std::chrono::high_resolution_clock::now();  // 开始计时
-    f_pro_division();
-    auto end = std::chrono::high_resolution_clock::now();    // 结束计时
+    auto start = std::chrono::high_resolution_clock::now();  
+    pro_division();
+    auto end = std::chrono::high_resolution_clock::now();   
     double seconds = std::chrono::duration<double, std::milli>(end - start).count();
-    cout<<"f_pro_division: "<<seconds<<" ms"<<endl;
+    cout<<"pro_division: "<<seconds<<" ms"<<endl;
 
  
     init();
-    auto start = std::chrono::high_resolution_clock::now();  // 开始计时
-    f_pro_elimination();
-    auto end = std::chrono::high_resolution_clock::now();    // 结束计时
+    auto start = std::chrono::high_resolution_clock::now(); 
+    pro_elimination();
+    auto end = std::chrono::high_resolution_clock::now();    
     double seconds = std::chrono::duration<double, std::milli>(end - start).count();
-    cout<<"f_pro_elimination: "<<seconds<<" ms"<<endl;
+    cout<<"pro_elimination: "<<seconds<<" ms"<<endl;
 
 
 }
