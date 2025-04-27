@@ -1,0 +1,12 @@
+1.SIMD_Neon.cpp
+主要内容：
+普通高斯消去串行算法
+使用Neon并行化
+对齐与未对齐操作优化
+cache优化
+实验平台：ARM服务器平台
+2.SIMD_SSE_AVX.cpp
+主要内容
+SSE优化算法
+AVX优化算法
+实验平台：x86
